@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Muneeb</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+/* ============================ */
+/* THEME VARIABLES (CUSTOMIZE HERE) */
+/* ============================ */
+:root {
+    --primary-font: 'Poppins', sans-serif;
+    
+    /* Glassmorphism Settings */
+    --glass-bg: rgba(255, 255, 255, 0.03);
+    --glass-border: rgba(255, 255, 255, 0.12);
+    --glass-shadow: 0 10px 40px rgba(0,0,0,0.25);
+    
+    /* Text Colors */
+    --text-primary: #ffffff;
+    --text-secondary: rgba(255, 255, 255, 0.85);
+    
+    /* Brand Accent */
+    --accent-color: rgba(255, 255, 255, 0.15);
+}
+
+/* ============================ */
+/* BASE STYLES                  */
+/* ============================ */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: var(--primary-font);
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+    outline: none;
+}
+
+body {
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+    background: #000;
+}
+
+/* ============================ */
+/* STARTING PAGE                */
+/* ============================ */
+#start-page {
+    position: fixed;
+    inset: 0;
+    z-index: 999;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: #000;
+    transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1), opacity 0.8s ease;
+}
+
+#start-page.hidden {
+    transform: translateY(-100%);
+    opacity: 0;
+}
+
+.start-video-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+}
+
+.start-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5); 
+    z-index: -1;
+}
+
+.top-left-brand {
+    position: absolute;
+    top: 40px;
+    left: 40px;
+    color: var(--text-primary);
+    font-size: 1.1rem;
+    font-weight: 400;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    z-index: 10;
+    animation: fadeIn 2s ease-in-out;
+    text-shadow: 0 4px 15px rgba(0,0,0,0.6);
+    opacity: 0.9;
+}
+
+.top-left-brand i {
+    font-size: 1.2rem;
+    color: rgba(255, 255, 255, 0.8);
+    filter: drop-shadow(0 0 5px rgba(255,255,255,0.4));
+}
+
+.start-content {
+    text-align: center;
+    color: var(--text-primary);
+    padding: 20px;
+    animation: fadeIn 2s ease-in-out;
+    margin-bottom: 80px; 
+    position: relative;
+    z-index: 5;
+}
+
+.start-content h1 {
+    font-size: 4rem;
+    font-weight: 700;
+    letter-spacing: 4px;
+    text-shadow: 0 4px 15px rgba(0,0,0,0.6);
+}
+
+.start-content p {
+    font-size: 1.2rem;
+    font-weight: 300;
+    margin-top: -100px;
+    color: var(--text-secondary);
+}
+
+.swipe-wrapper {
+    position: absolute;
+    bottom: 50px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 0 20px;
+    animation: fadeIn 2.5s ease-in-out;
+}
+
+.swipe-container {
+    width: min(100%, 340px);
+    height: 64px;
+    background: rgba(20, 20, 20, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 40px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+.swipe-text {
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.95rem;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+    pointer-events: none;
+    z-index: 1;
+    transition: opacity 0.2s;
+}
+
+.swipe-btn {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: var(--accent-color);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    left: 6px;
+    cursor: grab;
+    z-index: 2;
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.swipe-btn.dragging {
+    transition: none;
+    cursor: grabbing;
+    background: rgba(255, 255, 255, 0.25);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================ */
+/* MAIN PAGE HEADER             */
+/* ============================ */
+.main-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 80px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 30px;
+    z-index: 100; 
+    background: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, transparent 100%);
+}
+
+.header-title {
+    color: var(--text-primary);
+    font-size: 1.2rem;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+    pointer-events: none;
+}
+
+.nav-btn {
+    width: 45px;
+    height: 45px;
+    border-radius: 12px;
+    background: rgba(25, 25, 25, 0.3);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+.nav-btn:hover {
+    background: var(--accent-color);
+    transform: translateY(-2px);
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 75px;
+    left: 30px;
+    background: rgba(255, 255, 255, 0.05); 
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 20px;
+    padding: 10px;
+    list-style: none;
+    min-width: 180px;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-15px);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.4), inset 0 0 15px rgba(255,255,255,0.05);
+}
+
+.dropdown-menu.show {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+}
+
+.dropdown-menu li a {
+    color: rgba(255, 255, 255, 0.9);
+    padding: 12px 20px;
+    display: block;
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    letter-spacing: 0.5px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.03); 
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.dropdown-menu li a:hover {
+    background: var(--accent-color);
+    border-color: rgba(255, 255, 255, 0.25);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+/* ============================ */
+/* ABOUT PAGE OVERLAY           */
+/* ============================ */
+#about-page {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    transition: transform 0.6s cubic-bezier(0.77, 0, 0.175, 1), opacity 0.6s ease;
+}
+
+#about-page.hidden-page {
+    transform: translateY(100%);
+    opacity: 0;
+    pointer-events: none;
+}
+
+.about-header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    padding: 0 30px;
+}
+
+.about-content {
+    text-align: center;
+    color: var(--text-primary);
+    padding: 50px 30px;
+    width: min(92vw, 420px);
+    background: var(--glass-bg);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow), inset 0 0 25px rgba(255,255,255,.04);
+    border-radius: 35px;
+    animation: fadeIn 1s ease-in-out;
+    position: relative;
+    overflow: hidden;
+}
+
+.about-content::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(120deg, transparent 20%, rgba(255,255,255,.12) 50%, transparent 80%);
+    animation: shine 8s linear infinite;
+    pointer-events: none; 
+}
+
+.about-content h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    letter-spacing: 3px;
+    margin-bottom: 15px;
+    text-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    position: relative;
+    z-index: 1;
+}
+
+.about-content p {
+    font-size: 1.1rem;
+    font-weight: 300;
+    color: var(--text-secondary);
+    position: relative;
+    z-index: 1;
+    line-height: 1.6;
+}
+
+/* ============================ */
+/* MAIN PROFILE CARD            */
+/* ============================ */
+.video-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+}
+
+.overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.15);
+    z-index: -1;
+}
+
+.container {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    perspective: 2500px;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.container.hidden-behind {
+    opacity: 0;
+    pointer-events: none;
+    transform: scale(0.95);
+}
+
+.card {
+    width: min(92vw, 420px);
+    height: 620px;
+    position: relative;
+    transform-style: preserve-3d;
+    cursor: grab;
+}
+
+.side {
+    position: absolute;
+    inset: 0;
+    border-radius: 35px;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: var(--glass-bg);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow), inset 0 0 25px rgba(255,255,255,.04);
+    overflow: hidden;
+}
+
+.side::before {
+    content: "";
+    position: absolute;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(120deg, transparent 20%, rgba(255,255,255,.12) 50%, transparent 80%);
+    animation: shine 8s linear infinite;
+}
+
+@keyframes shine {
+    from { transform: translateX(-100%) translateY(-100%); }
+    to { transform: translateX(100%) translateY(100%); }
+}
+
+.back {
+    transform: rotateY(180deg);
+}
+
+.back h1 {
+    color: var(--text-primary);
+    font-size: 3rem;
+    font-weight: 700;
+    letter-spacing: 5px;
+    text-shadow: 0 0 25px rgba(255,255,255,.5);
+    text-align: center;
+    padding: 0 20px;
+    z-index: 1; /* Keep text above background video */
+}
+
+.pfp {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid rgba(255,255,255,.3);
+    box-shadow: 0 0 25px rgba(255,255,255,.25);
+    background: #333; 
+}
+
+.name {
+    margin-top: 20px;
+    color: var(--text-primary);
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.bio {
+    margin-top: 12px;
+    color: var(--text-secondary);
+    text-align: center;
+    max-width: 80%;
+    line-height: 1.6;
+}
+
+/* ============================ */
+/* NEW: PUBG ID STYLES          */
+/* ============================ */
+.pubg-id-container {
+    margin-top: 15px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 8px 20px;
+    border-radius: 25px;
+    position: relative;
+    z-index: 2;
+}
+
+.pubg-label {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.pubg-id {
+    color: var(--text-primary);
+    font-weight: 600;
+    font-size: 1rem;
+    letter-spacing: 1px;
+}
+
+.copy-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.copy-btn:hover {
+    background: var(--accent-color);
+    transform: scale(1.1);
+}
+
+.toast {
+    position: absolute;
+    bottom: -35px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.toast.show {
+    opacity: 1;
+    bottom: -40px;
+}
+
+/* ============================ */
+/* NEW: BACK VIDEO STYLES       */
+/* ============================ */
+.back-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -2;
+}
+
+.back-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.0); /* Dark overlay to keep text readable */
+    z-index: -1;
+}
+
+/* ============================ */
+
+.socials {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    width: 80%;
+}
+
+.socials a {
+    width: 52px;
+    height: 52px;
+    border-radius: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    text-decoration: none;
+    background: rgba(255,255,255,.05);
+    border: 1px solid rgba(255,255,255,.08);
+    backdrop-filter: blur(10px);
+    transition: .3s;
+    position: relative;
+    overflow: hidden;
+}
+
+.socials a:hover {
+    transform: translateY(-6px);
+    background: var(--accent-color);
+}
+
+.socials i { font-size: 20px; }
+
+.stars {
+    margin-top: 20px;
+    display: flex;
+    gap: 12px;
+}
+
+.star {
+    font-size: 22px;
+    color: rgba(255,255,255,.75);
+    cursor: pointer;
+    transition: .3s;
+    text-shadow: 0 0 10px rgba(255,255,255,.3);
+    filter: drop-shadow(0 0 6px rgba(255,255,255,.4));
+}
+
+.star:hover {
+    transform: scale(1.25);
+    color: #ffffff;
+    text-shadow: 0 0 18px rgba(255,255,255,.9);
+}
+
+.ripple {
+    position: absolute;
+    border-radius: 50%;
+    transform: scale(0);
+    animation: rippleAnim 600ms linear;
+    background: rgba(255,255,255,0.35);
+    pointer-events: none;
+}
+
+@keyframes rippleAnim {
+    to { transform: scale(4); opacity: 0; }
+}
+
+@media(max-width: 480px) {
+    .card { height: 580px; }
+    .pfp { width: 120px; height: 120px; }
+    .name { font-size: 1.6rem; }
+    .back h1 { font-size: 2.5rem; }
+    .start-content h1 { font-size: 3rem; } 
+    .top-left-brand { top: 25px; left: 25px; font-size: 0.9rem; } 
+    .main-header, .about-header { padding: 0 20px; }
+    .dropdown-menu { left: 20px; }
+    .header-title { font-size: 1rem; }
+}
+</style>
+</head>
+
+<body>
+
+<div id="start-page">
+    <video class="start-video-bg" autoplay muted loop playsinline poster="#">
+        <source src="Bgvideo.mp4" type="video/mp4">
+    </video>
+    <div class="start-overlay"></div>
+    
+    <div class="top-left-brand">
+        <i class="fas fa-layer-group"></i>
+        <span>xtracc.30</span>
+    </div>
+
+    <div class="start-content">
+        <h1>Hello!</h1>
+        <p></p>
+    </div>
+
+    <div class="swipe-wrapper">
+        <div class="swipe-container" id="swipe-container">
+            <span class="swipe-text" id="swipe-text">Swipe right</span>
+            <div class="swipe-btn" id="swipe-btn">
+                <i class="fas fa-arrow-right"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="about-page" class="hidden-page">
+    <div class="about-header">
+        <div class="nav-btn" id="about-back-btn">
+            <i class="fas fa-arrow-left"></i>
+        </div>
+    </div>
+    
+    <div class="about-content">
+        <h1>About</h1>
+        <p>Me and my friends we are the best</p>
+    </div>
+</div>
+
+<header class="main-header">
+    <div class="nav-btn" id="menu-btn">
+        <i class="fas fa-bars"></i>
+    </div>
+    
+    <h2 class="header-title">Player profile</h2>
+    
+    <div class="nav-btn" id="back-btn">
+        <i class="fas fa-arrow-left"></i>
+    </div>
+
+    <ul class="dropdown-menu" id="dropdown-menu">
+        <li><a href="#" id="about-link"><i class="fas fa-user" style="margin-right: 8px;"></i> About</a></li>
+    </ul>
+</header>
+
+<video class="video-bg" autoplay muted loop playsinline poster="#">
+    <source src="Bgvideo.mp4" type="video/mp4">
+</video>
+<div class="start-overlay"></div>
+
+<div class="container" id="main-card-container">
+    <div class="card" id="card">
+        
+        <div class="side front">
+            <img src="Pfp2.jpg" class="pfp" alt="Profile Picture">
+            
+            <h1 class="name">xtracc.30</h1>
+            
+            <p class="bio">Creator • Dreamer • Developer<br></p>
+
+            <div class="pubg-id-container">
+                <span class="pubg-label">PUBG Id:</span>
+                <span class="pubg-id" id="pubg-id-text">5868339250</span>
+                <button class="copy-btn" id="copy-btn" aria-label="Copy ID">
+                    <i class="fas fa-copy"></i>
+                </button>
+                <div class="toast" id="copy-toast">Copied!</div>
+            </div>
+
+            <div class="socials">
+                <a href="https://www.tiktok.com/@xtracc.30" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+                <a href="https://www.instagram.com/xtracc.30" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="#SNAPCHAT_URL#" aria-label="Snapchat"><i class="fab fa-snapchat"></i></a>
+                <a href="#DISCORD_URL#" aria-label="Discord"><i class="fab fa-discord"></i></a>
+                <a href="#TWITTER_URL#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="#YOUTUBE_URL#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                <a href="#GITHUB_URL#" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                <a href="#EMAIL_ADDRESS#" aria-label="Email"><i class="fas fa-envelope"></i></a>
+            </div>
+
+            <div class="stars">
+                <span class="star">★</span>
+                <span class="star">★</span>
+                <span class="star">★</span>
+                <span class="star">★</span>
+                <span class="star">★</span>
+            </div>
+        </div>
+
+        <div class="side back">
+            <video class="back-video" autoplay muted loop playsinline poster="Cardbg.jpeg">
+                <source src="BacksideVideo.mp4" type="video/mp4">
+            </video>
+            <div class="back-overlay"></div>
+            
+            <h1></h1>
+        </div>
+    </div>
+</div>
+
+<script>
+// --- HEADER MENUS & ABOUT PAGE LOGIC ---
+const menuBtn = document.getElementById('menu-btn');
+const backBtn = document.getElementById('back-btn');
+const dropdownMenu = document.getElementById('dropdown-menu');
+const startPage = document.getElementById('start-page');
+const swipeBtn = document.getElementById('swipe-btn');
+const swipeText = document.getElementById('swipe-text');
+
+const aboutLink = document.getElementById('about-link');
+const aboutPage = document.getElementById('about-page');
+const aboutBackBtn = document.getElementById('about-back-btn');
+const mainCardContainer = document.getElementById('main-card-container'); 
+
+// Toggle Dropdown Menu
+menuBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    dropdownMenu.classList.toggle('show');
+});
+
+// Hide dropdown when clicking anywhere else
+document.addEventListener('click', (e) => {
+    if (!menuBtn.contains(e.target) && !dropdownMenu.contains(e.target)) {
+        dropdownMenu.classList.remove('show');
+    }
+});
+
+// About Link logic
+aboutLink.addEventListener('click', (e) => {
+    e.preventDefault();
+    dropdownMenu.classList.remove('show'); 
+    aboutPage.classList.remove('hidden-page'); 
+    mainCardContainer.classList.add('hidden-behind'); 
+});
+
+// About Page Back Button
+aboutBackBtn.addEventListener('click', () => {
+    aboutPage.classList.add('hidden-page'); 
+    mainCardContainer.classList.remove('hidden-behind'); 
+});
+
+// Back Button - Return to start page
+backBtn.addEventListener('click', () => {
+    startPage.style.display = 'flex';
+    setTimeout(() => {
+        startPage.classList.remove('hidden');
+    }, 10);
+    
+    currentTranslate = 0;
+    swipeBtn.style.transform = `translateX(0px)`;
+    swipeText.style.opacity = 1;
+});
+
+// --- START PAGE SWIPE LOGIC ---
+const swipeContainer = document.getElementById('swipe-container');
+
+let isSwiping = false;
+let startX = 0;
+let currentTranslate = 0;
+
+function hideStartPage() {
+    startPage.classList.add('hidden');
+    setTimeout(() => {
+        startPage.style.display = 'none';
+    }, 800); 
+}
+
+function handleSwipeStart(e) {
+    isSwiping = true;
+    startX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
+    swipeBtn.classList.add('dragging');
+}
+
+function handleSwipeMove(e) {
+    if (!isSwiping) return;
+    
+    if(e.cancelable) e.preventDefault(); 
+    
+    const currentX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
+    const walk = currentX - startX;
+    
+    const containerWidth = swipeContainer.offsetWidth;
+    const padding = 6; 
+    const btnWidth = swipeBtn.offsetWidth;
+    const maxTranslate = containerWidth - btnWidth - (padding * 2);
+
+    currentTranslate = Math.max(0, Math.min(walk, maxTranslate));
+    swipeBtn.style.transform = `translateX(${currentTranslate}px)`;
+    swipeText.style.opacity = 1 - (currentTranslate / maxTranslate);
+}
+
+function handleSwipeEnd() {
+    if (!isSwiping) return;
+    isSwiping = false;
+    swipeBtn.classList.remove('dragging');
+
+    const containerWidth = swipeContainer.offsetWidth;
+    const padding = 6;
+    const btnWidth = swipeBtn.offsetWidth;
+    const maxTranslate = containerWidth - btnWidth - (padding * 2);
+
+    if (currentTranslate >= maxTranslate * 0.85) {
+        swipeBtn.style.transform = `translateX(${maxTranslate}px)`;
+        hideStartPage();
+    } else {
+        currentTranslate = 0;
+        swipeBtn.style.transform = `translateX(0px)`;
+        swipeText.style.opacity = 1;
+    }
+}
+
+swipeBtn.addEventListener('mousedown', handleSwipeStart);
+document.addEventListener('mousemove', handleSwipeMove, { passive: false });
+document.addEventListener('mouseup', handleSwipeEnd);
+
+swipeBtn.addEventListener('touchstart', handleSwipeStart);
+document.addEventListener('touchmove', handleSwipeMove, { passive: false });
+document.addEventListener('touchend', handleSwipeEnd);
+
+// --- CARD DRAG LOGIC ---
+const card = document.getElementById('card');
+let isCardDragging = false;
+let cardX = 0;
+let cardY = 0;
+let lastCardTouchX = 0;
+let lastCardTouchY = 0;
+
+function isEdgeOn() {
+    let yAngle = cardY % 180;
+    if (yAngle < 0) yAngle += 180;
+    let xAngle = cardX % 180;
+    if (xAngle < 0) xAngle += 180;
+    let nearVerticalEdge = Math.abs(yAngle - 90) < 25;
+    let nearHorizontalEdge = Math.abs(xAngle - 90) < 25;
+    return nearVerticalEdge || nearHorizontalEdge;
+}
+
+card.addEventListener('mousedown', () => { isCardDragging = true; });
+document.addEventListener('mouseup', () => { isCardDragging = false; });
+
+document.addEventListener('mousemove', (e) => {
+    if (!isCardDragging) return;
+    cardY += e.movementX * 0.5;
+    cardX -= e.movementY * 0.5;
+    card.style.transform = `rotateX(${cardX}deg) rotateY(${cardY}deg)`;
+});
+
+card.addEventListener('touchstart', (e) => {
+    isCardDragging = true;
+    lastCardTouchX = e.touches[0].clientX;
+    lastCardTouchY = e.touches[0].clientY;
+});
+
+document.addEventListener('touchend', () => { isCardDragging = false; });
+
+document.addEventListener('touchmove', (e) => {
+    if (!isCardDragging) return;
+    const touch = e.touches[0];
+    let dx = touch.clientX - lastCardTouchX;
+    let dy = touch.clientY - lastCardTouchY;
+    cardY += dx * 0.4;
+    cardX -= dy * 0.4;
+    card.style.transform = `rotateX(${cardX}deg) rotateY(${cardY}deg)`;
+    lastCardTouchX = touch.clientX;
+    lastCardTouchY = touch.clientY;
+});
+
+document.addEventListener('mousedown', () => {
+    if (isEdgeOn() && startPage.classList.contains('hidden') && aboutPage.classList.contains('hidden-page')) isCardDragging = true;
+});
+
+document.addEventListener('touchstart', (e) => {
+    if (isEdgeOn() && startPage.classList.contains('hidden') && aboutPage.classList.contains('hidden-page')) {
+        isCardDragging = true;
+        lastCardTouchX = e.touches[0].clientX;
+        lastCardTouchY = e.touches[0].clientY;
+    }
+});
+
+
+// --- RIPPLE EFFECT ---
+document.querySelectorAll(".socials a").forEach(btn => {
+    btn.addEventListener("click", function(e) {
+        const ripple = document.createElement("span");
+        ripple.classList.add("ripple");
+        const rect = this.getBoundingClientRect();
+        const size = Math.max(rect.width, rect.height);
+        ripple.style.width = ripple.style.height = size + "px";
+        const x = e.clientX - rect.left - size / 2;
+        const y = e.clientY - rect.top - size / 2;
+        ripple.style.left = x + "px";
+        ripple.style.top = y + "px";
+        this.appendChild(ripple);
+        setTimeout(() => ripple.remove(), 600);
+    });
+});
+
+// --- PUBG ID COPY LOGIC ---
+const copyBtn = document.getElementById('copy-btn');
+const pubgIdText = document.getElementById('pubg-id-text');
+const copyToast = document.getElementById('copy-toast');
+
+copyBtn.addEventListener('click', () => {
+    navigator.clipboard.writeText(pubgIdText.innerText).then(() => {
+        copyToast.classList.add('show');
+        copyBtn.innerHTML = '<i class="fas fa-check"></i>';
+        
+        setTimeout(() => {
+            copyToast.classList.remove('show');
+            copyBtn.innerHTML = '<i class="fas fa-copy"></i>';
+        }, 2000);
+    }).catch(err => {
+        console.error('Failed to copy ID: ', err);
+    });
+});
+</script>
+
+</body>
+</html>
